@@ -1,0 +1,19 @@
+name: prcomment
+version: 0.1.0
+
+authors:
+  - Michael Nikitochkin <miry.sof@gmail.com>
+
+description: |
+  Creates or updates single comment of PR or Issue
+
+license: Apache-2.0
+
+# dependencies:
+#   pg:
+#     github: will/crystal-pg
+#     version: "~> 0.5"
+
+# development_dependencies:
+#   webmock:
+#     github: manastech/webmock.cr
