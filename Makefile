@@ -8,3 +8,7 @@ run:
 .PHONY: build
 build: _output
 	crystal build --release -s -o _output/prcomment src/prcomment.cr
+
+fmt:
+	crystal tool format
+
