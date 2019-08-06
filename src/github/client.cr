@@ -22,7 +22,7 @@ module Github
     end
 
     def request(method, endpoint, body : String)
-	    response = http.exec(method, endpoint, body: body)
+      response = http.exec(method, endpoint, body: body)
 
       case response.status_code
       when 201
@@ -37,7 +37,6 @@ module Github
         raise "Something goes wrong"
       end
       response
-
     end
 
     def initialize(@token : String, @repo = "miry/prcomment", @issue = 1)

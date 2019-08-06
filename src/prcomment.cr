@@ -4,7 +4,7 @@ class PRComment
   @client : Github::Client
 
   def initialize(token : String)
-    @client = Github::Client.new(token)
+    @client = Github::Client.new(token, repo: "miry/prcomment", issue: 1)
   end
 
   def my_comment(pattern : Regex)
