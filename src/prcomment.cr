@@ -3,8 +3,8 @@ require "./github/*"
 class PRComment
   @client : Github::Client
 
-  def initialize(token : String)
-    @client = Github::Client.new(token, repo: "miry/prcomment", issue: 1)
+  def initialize(token : String, repo : String, issue : Int64)
+    @client = Github::Client.new(token, repo, issue)
   end
 
   def my_comment(pattern : Regex)
@@ -42,6 +42,6 @@ class PRComment
 end
 
 token = ENV["GITHUB_TOKEN"]
-tool = PRComment.new(token)
-tool.post("First comment")
+tool = PRComment.new(token, "miry/prcomment", 1)
+tool.post("Second comment")
 tool.close

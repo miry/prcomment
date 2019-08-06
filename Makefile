@@ -11,4 +11,3 @@ build: _output
 
 fmt:
 	crystal tool format
-

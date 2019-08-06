@@ -21,78 +21,55 @@ module Github
       return _http
     end
 
-    def request(method, endpoint, body : String)
-      response = http.exec(method, endpoint, body: body)
+    def request(method, endpoint, headers : HTTP::Headers? = nil, body : String? = nil)
+      response = http.exec(method.upcase, endpoint, headers, body)
+
+      puts "#{method} #{endpoint} => #{response.status_code} #{response.status_message}"
 
       case response.status_code
-      when 201
-        puts "201: Successfuly created a comment"
-      when 401
-        raise "401: Requires authentication"
-      when 403
-        raise "403: Does not have access"
+      when 200..299
       else
         puts response.status.code
         puts response.body.lines
         raise "Something goes wrong"
       end
-      response
+
+      JSON.parse(response.body)
     end
 
-    def initialize(@token : String, @repo = "miry/prcomment", @issue = 1)
+    def get(endpoint, headers : HTTP::Headers? = nil, body : String? = nil)
+      request "GET", endpoint, headers, body
     end
 
+    def post(endpoint, headers : HTTP::Headers? = nil, body : String? = nil)
+      request "POST", endpoint, headers, body
+    end
+
+    def patch(endpoint, headers : HTTP::Headers? = nil, body : String? = nil)
+      request "PATCH", endpoint, headers, body
+    end
+
+    def initialize(@token : String, @repo : String, @issue : Int64)
+    end
+
+    # https://developer.github.com/v3/issues/comments/#list-comments-on-an-issue
     def comments
-      response = request "get", "/repos/#{@repo}/issues/#{@issue}/comments"
-
-      if response.body?
-        return JSON.parse(response.body)
-      end
-      puts "Something goes wrong"
-      puts response.status_code
-      return [] of String
+      get "/repos/#{@repo}/issues/#{@issue}/comments"
     end
 
+    # https://developer.github.com/v3/issues/comments/#create-a-comment
     def create_comment(msg : String)
-      response = http.post("/repos/#{@repo}/issues/#{@issue}/comments",
+      post("/repos/#{@repo}/issues/#{@issue}/comments",
         headers: HTTP::Headers{"Authorization" => "token #{@token}"},
         body: %({"body": "#{msg}"))
-
-      case response.status_code
-      when 201
-        puts "201: Successfuly created a comment"
-      when 401
-        puts "401: Requires authentication"
-      when 403
-        puts "403: Does not have access"
-        puts response.body.lines
-      else
-        puts "Something goes wrong"
-        puts response.status.code
-        puts response.body.lines
-      end
       nil
     end
 
     # https://developer.github.com/v3/issues/comments/#edit-a-comment
     def update_comment(id, msg : String)
-      response = http.patch("/repos/#{@repo}/issues/comments/#{id}",
+      patch("/repos/#{@repo}/issues/comments/#{id}",
         headers: HTTP::Headers{"Authorization" => "token #{@token}"},
         body: %({"body": "#{msg}"))
-      case response.status_code
-      when 200
-        puts "200: Successfuly updated the comment"
-      when 401
-        puts "401: Requires authentication"
-      when 403
-        puts "403: Does not have access"
-        puts response.body.lines
-      else
-        puts "Something goes wrong"
-        puts response.status.code
-        puts response.body.lines
-      end
-      nil
     end
 
     def close
