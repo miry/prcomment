@@ -13,6 +13,7 @@ module Github
       _http = HTTP::Client.new "api.github.com", port: 443, tls: true
 
       _http.before_request do |request|
+        request.headers["Content-Type"] = "application/json"
         request.headers["Authorization"] = "token #{@token}"
       end
 
@@ -20,17 +21,31 @@ module Github
       return _http
     end
 
+    def request(method, endpoint, body : String)
+	    response = http.exec(method, endpoint, body: body)
+
+      case response.status_code
+      when 201
+        puts "201: Successfuly created a comment"
+      when 401
+        raise "401: Requires authentication"
+      when 403
+        raise "403: Does not have access"
+      else
+        puts response.status.code
+        puts response.body.lines
+        raise "Something goes wrong"
+      end
+      response
+
+    end
+
     def initialize(@token : String, @repo = "miry/prcomment", @issue = 1)
     end
 
     def comments
-      response = http.get "/repos/#{@repo}/issues/#{@issue}/comments"
+      response = request "get", "/repos/#{@repo}/issues/#{@issue}/comments"
 
-      if response.status_code != 200 # => 200
-        puts "Something goes wrong"
-        puts response.status.code
-        return [] of String
-      end
       if response.body?
         return JSON.parse(response.body)
       end
