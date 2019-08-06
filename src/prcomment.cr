@@ -7,7 +7,7 @@ class PRComment
     @client = Github::Client.new(token, repo, issue)
   end
 
-  def my_comment(pattern : Regex)
+  def my_comment(pattern : Regex) : JSON::Any?
     result = @client.comments
     if result.is_a?(JSON::Any)
       result.as_a.each do |comment|
@@ -19,7 +19,7 @@ class PRComment
     nil
   end
 
-  def post(msg : String)
+  def post(msg : String) : Nil
     comment = my_comment(/#{msg}/i)
     if comment
       update_comment(comment["id"], msg)
@@ -28,20 +28,24 @@ class PRComment
     end
   end
 
-  def update_comment(comment_id, msg : String)
+  def update_comment(comment_id, msg : String) : Nil
     @client.update_comment(comment_id, msg)
   end
 
-  def create_comment(msg : String)
+  def create_comment(msg : String) : Nil
     @client.create_comment(msg)
   end
 
-  def close
+  def close : Nil
     @client.close unless @client.nil?
   end
 end
 
 token = ENV["GITHUB_TOKEN"]
-tool = PRComment.new(token, "miry/prcomment", 1)
-tool.post("Second comment")
+repo = "miry/prcomment"
+issue_id : Int64 = 1
+msg = "Second comment"
+
+tool = PRComment.new(token, repo, issue_id)
+tool.post(msg)
 tool.close
