@@ -28,4 +28,4 @@ fmt:
 	crystal tool format
 
 release: build.linux build.darwin
-	hub release create -a _output/prcomment-$(VERSION)-x86_64-linux _output/prcomment-$(VERSION)-x86_64-macos v$(VERSION)
+	hub release create -a "_output/prcomment-$(VERSION)-x86_64-linux" -a "_output/prcomment-$(VERSION)-x86_64-macos" v$(VERSION)
