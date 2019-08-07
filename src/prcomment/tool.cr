@@ -18,8 +18,12 @@ module PRComment
       nil
     end
 
-    def post(msg : String) : Nil
-      comment = my_comment(/#{msg}/i)
+    def post(msg : String, match = "") : Nil
+      if match == ""
+        match = msg
+      end
+
+      comment = my_comment(/#{match}/i)
       if comment
         update_comment(comment["id"], msg)
       else
