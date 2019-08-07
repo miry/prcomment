@@ -10,9 +10,15 @@ description: |
 license: Apache-2.0
 
 # dependencies:
-#   pg:
-#     github: will/crystal-pg
-#     version: "~> 0.5"
+  # cli:
+  #   github: bcardiff/cli
+  #   branch: crystal/v0.30.0
+  #   version: ~> 0.7.0
+
+  # callback:
+  #   github: bcardiff/callback
+  #   branch: crystal/v0.30.0
+  #   version: ~> 0.6.3
 
 # development_dependencies:
 #   webmock:

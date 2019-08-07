@@ -11,7 +11,7 @@ module Github
     include Github::Connection
     include Github::Client::Comments
 
-    def initialize(@token : String, @repo : String, @issue : Int64)
+    def initialize(@token : String, @repo : String, @issue : UInt64)
     end
 
     def close
