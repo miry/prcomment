@@ -22,6 +22,7 @@ build.darwin: _output
 
 build.docker:
 	docker build -f Dockerfile -t $(IMAGE) .
+	docker push $(IMAGE)
 
 fmt:
 	crystal tool format
