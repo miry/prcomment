@@ -16,3 +16,10 @@ prcomment -i 1 -r miry/prcomment Hello from console
 ```shell
 docker run -e GITHUB_TOKEN=<token> --rm -it miry/prcomment:0.1.0 -i 1 -r miry/prcomment Hello
 ```
+
+## Crystal
+
+```shell
+export GITHUB_TOKEN=<personal token>
+crystal run src/cli.cr -- -i 1 -r miry/prcomment Hello
+```
