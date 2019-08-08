@@ -41,4 +41,4 @@ It is also usefull to change previous answer with new one:
 ```shell
 crystal run src/cli.cr -- -i 1 -r miry/prcomment -m ":[+-]1:" ":+1:"  # Creates a comment with icon: ':+1'
 crystal run src/cli.cr -- -i 1 -r miry/prcomment -m ":[+-]1:" ":-1:"  # Replaces with ':-1:'
-``
+```
