@@ -1,5 +1,8 @@
 # PRCOMMENT
 
+[![](https://img.shields.io/github/release/miry/prcomment.svg?style=flat)](https://github.com/miry/prcomment/releases)
+[![](https://img.shields.io/github/license/miry/prcomment)](https://raw.githubusercontent.com/miry/prcomment/master/LICENSE)
+
 Creates or updates single comment to Github PR or Issue.
 
 # Usage
