@@ -7,6 +7,10 @@ authors:
 description: |
   Creates or updates single comment of PR or Issue
 
+targets:
+  prcomment:
+    main: src/cli.cr
+
 license: lgpl-3.0
 
 # dependencies:
