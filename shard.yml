@@ -1,4 +1,6 @@
 name: prcomment
+repository: https://github.com/miry/prcomment.git
+
 version: 0.1.1
 
 authors:
@@ -11,7 +13,8 @@ targets:
   prcomment:
     main: src/cli.cr
 
-license: lgpl-3.0
+
+license: LGPL-3.0
 
 # dependencies:
   # cli:
