@@ -1,5 +1,6 @@
 VERSION=0.1.1
-IMAGE=miry/prcomment:$(VERSION)
+IMAGE=miry/prcomment:$(VERSION)-1
+GITHUB_TOKEN=?token
 
 _output:
 	mkdir _output
@@ -20,10 +21,17 @@ build.linux: _output
 build.darwin: _output
 	crystal build --cross-compile --target "x86_64-apple-darwin" --release -o _output/prcomment-$(VERSION)-x86_64-macos src/cli.cr
 
-build.docker:
+.PHONY: docker.build
+docker.build:
 	docker build -f Dockerfile -t $(IMAGE) .
+
+.PHONY: docker.release
+docker.release: docker.build
 	docker push $(IMAGE)
 
+.PHONY: docker.test
+docker.test: docker.build
+	docker run -it --rm $(IMAGE) -t $(GITHUB_TOKEN) -r miry/prcomment -i 1 Test message from Makefile
 fmt:
 	crystal tool format
 
