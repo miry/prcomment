@@ -10,7 +10,7 @@ run: build
 
 .PHONY: build
 build: _output
-	crystal build --release -o _output/prcomment src/cli.cr
+	crystal build --release --no-debug -o _output/prcomment src/cli.cr
 
 .PHONY: build.linux
 build.linux: _output
