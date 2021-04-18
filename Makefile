@@ -1,5 +1,5 @@
 VERSION=0.1.1
-IMAGE=miry/prcomment:$(VERSION)-1
+IMAGE=miry/prcomment:$(VERSION)-2
 GITHUB_TOKEN=?token
 
 _output:
@@ -12,6 +12,10 @@ run: build
 .PHONY: build
 build: _output
 	crystal build --release --no-debug -o _output/prcomment src/cli.cr
+
+.PHONY: build.static
+build.static: _output
+	crystal build --static --release --no-debug -o _output/prcomment src/cli.cr
 
 .PHONY: build.linux
 build.linux: _output
@@ -32,8 +36,11 @@ docker.release: docker.build
 .PHONY: docker.test
 docker.test: docker.build
 	docker run -it --rm $(IMAGE) -t $(GITHUB_TOKEN) -r miry/prcomment -i 1 Test message from Makefile
+
+.PHONY: fmt
 fmt:
 	crystal tool format
 
+.PHONY: release
 release: build.linux build.darwin
 	hub release create -a "_output/prcomment-$(VERSION)-x86_64-linux" -a "_output/prcomment-$(VERSION)-x86_64-macos" v$(VERSION)
