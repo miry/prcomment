@@ -1,5 +1,5 @@
-VERSION=0.1.1
-IMAGE=miry/prcomment:$(VERSION)-2
+VERSION=0.1.2
+IMAGE=miry/prcomment:$(VERSION)
 GITHUB_TOKEN=?token
 
 _output:
@@ -43,4 +43,4 @@ fmt:
 
 .PHONY: release
 release: build.linux build.darwin
-	hub release create -a "_output/prcomment-$(VERSION)-x86_64-linux" -a "_output/prcomment-$(VERSION)-x86_64-macos" v$(VERSION)
+	hub release create v$(VERSION)

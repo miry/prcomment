@@ -17,7 +17,7 @@ prcomment -i 1 -r miry/prcomment Hello from console
 ## Docker
 
 ```shell
-docker run -e GITHUB_TOKEN=<token> --rm -it miry/prcomment:0.1.1 -i 1 -r miry/prcomment Hello
+docker run -e GITHUB_TOKEN=<token> --rm -it miry/prcomment:0.1.2 -i 1 -r miry/prcomment Hello
 ```
 
 ## Crystal
@@ -49,5 +49,6 @@ crystal run src/cli.cr -- -i 1 -r miry/prcomment -m ":[+-]1:" ":-1:"  # Replaces
 The comment is too big for single line:
 
 ```shell
-echo "The big content could be piped\nSome pattern from the comment\nThird line" | crystal run src/cli.cr -- -i 1 -r miry/prcomment -m "Some pattern from the comment"
+echo "The big content could be piped\nSome pattern from the comment\nThird line" | \
+  crystal run src/cli.cr -- -i 1 -r miry/prcomment -m "Some pattern from the comment"
 ```
