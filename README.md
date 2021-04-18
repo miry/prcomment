@@ -45,3 +45,9 @@ It is also usefull to change previous answer with new one:
 crystal run src/cli.cr -- -i 1 -r miry/prcomment -m ":[+-]1:" ":+1:"  # Creates a comment with icon: ':+1'
 crystal run src/cli.cr -- -i 1 -r miry/prcomment -m ":[+-]1:" ":-1:"  # Replaces with ':-1:'
 ```
+
+The comment is too big for single line:
+
+```shell
+echo "The big content could be piped\nSome pattern from the comment\nThird line" | crystal run src/cli.cr -- -i 1 -r miry/prcomment -m "Some pattern from the comment"
+```

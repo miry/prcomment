@@ -9,16 +9,16 @@ module Github
       # https://developer.github.com/v3/issues/comments/#create-a-comment
       def create_comment(msg : String)
         post("/repos/#{@repo}/issues/#{@issue}/comments",
-          headers: HTTP::Headers{"Authorization" => "token #{@token}"},
-          body: %({"body": "#{msg}"))
+          # headers: HTTP::Headers{"Authorization" => "token #{@token}"},
+          body: {"body" => msg}.to_json)
         nil
       end
 
       # https://developer.github.com/v3/issues/comments/#edit-a-comment
       def update_comment(id, msg : String)
         patch("/repos/#{@repo}/issues/comments/#{id}",
-          headers: HTTP::Headers{"Authorization" => "token #{@token}"},
-          body: %({"body": "#{msg}"))
+          # headers: HTTP::Headers{"Authorization" => "token #{@token}"},
+          body: {"body" => msg}.to_json)
       end
     end
   end

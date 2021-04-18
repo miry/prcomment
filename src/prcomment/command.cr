@@ -38,13 +38,17 @@ module PRComment
         end
       end
 
-      if repo == "" || token == "" || issue_id == 0 || msg == ""
+      if repo == "" || token == "" || issue_id == 0
         puts "At least one argument required"
         puts parser
         exit = true
       end
 
       return if exit
+
+      if msg == ""
+        msg = STDIN.gets_to_end
+      end
 
       tool = ::PRComment::Tool.new(token, repo, issue_id)
       tool.post(msg, match)
