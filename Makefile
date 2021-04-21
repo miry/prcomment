@@ -17,14 +17,6 @@ build: _output
 build.static: _output
 	crystal build --static --release --no-debug -o _output/prcomment src/cli.cr
 
-.PHONY: build.linux
-build.linux: _output
-	crystal build --cross-compile --target "x86_64-unknown-linux-gnu" --release -o _output/prcomment-$(VERSION)-x86_64-linux src/cli.cr
-
-.PHONY: build.darwin
-build.darwin: _output
-	crystal build --cross-compile --target "x86_64-apple-darwin" --release -o _output/prcomment-$(VERSION)-x86_64-macos src/cli.cr
-
 .PHONY: docker.build
 docker.build:
 	docker build -f Dockerfile -t $(IMAGE) .
