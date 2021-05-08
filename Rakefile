@@ -1,11 +1,21 @@
 # frozen_string_literal: true
 
-require 'rake/phony'
-require 'net/http'
-require 'json'
+require "rake/phony"
+require "net/http"
+require "json"
+
+def shards_exists
+  system("which shards > /dev/null")
+end
 
 def version
-  @version ||= `shards version`.chop!
+  @version ||= if shards_exists
+    `shards version`.chop!
+  else
+    require "yaml"
+    shard = YAML.load_file("shard.yml")
+    shard["version"]
+  end
 end
 
 task default: %i[test]

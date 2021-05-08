@@ -10,8 +10,6 @@ jobs:
       -
         uses: ruby/setup-ruby@v1
       -
-        uses: oprypin/install-crystal@v1
-      -
         name: Build the Docker image
         run: rake docker:build
 ...
