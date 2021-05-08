@@ -1,5 +1,5 @@
-.*
-_output
-Brewfile
-Dockerfile
-README.md
+*
+!src
+!shard.lock
+!shard.yml
+!Rakefile

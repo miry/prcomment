@@ -1,5 +1,5 @@
 ---
-name: Docker
+name: Test
 on: push
 jobs:
   main:
@@ -12,6 +12,6 @@ jobs:
       -
         uses: oprypin/install-crystal@v1
       -
-        name: Build the Docker image
-        run: rake docker:build
+        name: Run tests
+        run: rake test
 ...

@@ -39,7 +39,7 @@ module PRComment
       end
 
       if repo == "" || token == "" || issue_id == 0
-        puts "At least one argument required"
+        puts "Repo, token and issue are required"
         puts parser
         exit = true
       end

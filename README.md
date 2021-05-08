@@ -7,6 +7,8 @@ Creates or updates single comment to Github PR or Issue.
 
 # Usage
 
+First step is generate a new Github token in [Github Settings](https://github.com/settings/tokens/new?description=prcomment&scopes=public_repo).
+
 ## Binaries
 
 ```shell
