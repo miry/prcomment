@@ -20,6 +20,13 @@ task :fmt do
   sh "crystal tool format"
 end
 
+namespace :fmt do
+  desc "Check if code formatted"
+  task :check do
+    sh "crystal tool format --check"
+  end
+end
+
 task :setup
 
 task release: %i[test docker:push]
