@@ -18,8 +18,6 @@
 ---
 verify_signatures: false
 PreCommit:
-  Standard:
-    enabled: true
   # NOTE: LineEndings does not work with git versions < 2.x
   # LineEndings:
   #   enabled: true
