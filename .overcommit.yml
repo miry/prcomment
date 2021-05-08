@@ -29,7 +29,12 @@ PreCommit:
     enabled: true
   TrailingWhitespace:
     enabled: true
-    exclude:
-      - '**/db/structure.sql' # Ignore trailing whitespace in generated files
+  CrystalFormat:
+    enabled: true
+    description: 'Fix with crystal tool format'
+    required_executable: 'crystal'
+    command: ['crystal', 'tool', 'format']
+    parallelize: false
+    include: '**/*.cr'
 
 ...
