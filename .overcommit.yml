@@ -31,10 +31,15 @@ PreCommit:
     enabled: true
   CrystalFormat:
     enabled: true
-    description: 'Fix with crystal tool format'
+    description: Format with crystal tool format
     required_executable: 'crystal'
     command: ['crystal', 'tool', 'format']
     parallelize: false
     include: '**/*.cr'
-
+  CrystalTest:
+    enabled: true
+    description: Example of the overcommit hook without ruby code
+    required_executable: crystal
+    parallelize: false
+    command: ['crystal', 'spec']
 ...
