@@ -107,5 +107,5 @@ end
 desc "Run overcommit checks"
 task :overcommit do
   sh "bundle check --gemfile=.overcommit_gems.rb || bundle install --gemfile=.overcommit_gems.rb"
-  sh "bundle exec --gemfile=.overcommit_gems.rb overcommit -s ; bundle exec --gemfile=.overcommit_gems.rb overcommit -r"
+  sh "bundle exec --gemfile=.overcommit_gems.rb overcommit -r"
 end

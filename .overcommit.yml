@@ -16,7 +16,7 @@
 # Uncomment the following lines to make the configuration take effect.
 
 ---
-
+verify_signatures: false
 PreCommit:
   Standard:
     enabled: true
@@ -32,7 +32,7 @@ PreCommit:
   CrystalFormat:
     enabled: true
     description: Format with crystal tool format
-    required_executable: 'crystal'
+    required_executable: crystal
     command: ['crystal', 'tool', 'format']
     parallelize: false
     include: '**/*.cr'
@@ -42,4 +42,5 @@ PreCommit:
     required_executable: crystal
     parallelize: false
     command: ['crystal', 'spec']
+    include: '**/*_spec.cr'
 ...
