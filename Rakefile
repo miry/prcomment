@@ -3,16 +3,10 @@
 require "rake/phony"
 require "net/http"
 require "json"
-
-def shards_exists
-  system("which shards > /dev/null")
-end
+require "yaml"
 
 def version
-  @version ||= if shards_exists
-    `shards version`.chop!
-  else
-    require "yaml"
+  @version ||= begin
     shard = YAML.load_file("shard.yml")
     shard["version"]
   end
