@@ -45,12 +45,12 @@ desc "Build app in #{OUTPUT_PATH}"
 task build: BIN_PATH
 
 task BIN_PATH => [OUTPUT_PATH] do |t|
-  sh "crystal build --release --no-debug -o #{t.name} src/cli.cr"
+  sh "crystal build --release --debug -o #{t.name} src/cli.cr"
 end
 
 namespace :build do
   task static: [OUTPUT_PATH] do
-    sh "crystal build --release --no-debug --static -o #{BIN_PATH} src/cli.cr"
+    sh "crystal build --release --debug --static -o #{BIN_PATH} src/cli.cr"
   end
 end
 
