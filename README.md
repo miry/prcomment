@@ -33,6 +33,38 @@ export GITHUB_TOKEN=<personal token>
 crystal run src/cli.cr -- -i 1 -r miry/prcomment Hello
 ```
 
+## GithubAction
+
+### Inputs
+
+### msg
+
+**Required** The msg of the comment. Default `"World"`.
+
+### pr
+
+**Optional** The PR or Issue ID where to add a comment. Default `github.event.pull_request.number`.
+
+### match
+
+**Optional** Pattern of the comment to be replaced with. Default `""`
+
+
+### Examples
+
+```yml
+steps:
+  -
+    uses: miry/prcomment@v0.1.2
+    if: github.event_name == 'pull_request'
+    name: Comment
+    with:
+      msg: "Testing simple message from job ${{ github.run_id }}!"
+      match: 'Testing simple message from job .*'
+      pr: ${{ github.event.pull_request.number }}
+      token: ${{ secrets.GITHUB_TOKEN }}
+```
+
 # Options
 
 ## Match

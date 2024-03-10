@@ -1,0 +1,45 @@
+# action.yml
+# References: https://docs.github.com/en/actions/creating-actions
+# action.yml: https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions
+name: PRComment
+author: Michael Nikitochkin
+description: Update related PR with custom message from the Github Action
+
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
+inputs:
+  msg:
+    description: Provide the text of the comment
+    required: true
+  pr:
+    description: Specify PR or Issue ID
+    required: false
+  repo:
+    description: Specify Github repository
+    required: false
+  match:
+    description: Specify the pattern to update exists comment, instead of creating a new one
+    required: false
+    default: ""
+  token:
+    description: Github token to have write access to the PR.
+    required: true
+
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#runs-for-docker-container-actions
+runs:
+  using: docker
+  image: Dockerfile
+  args:
+    - ${{ inputs.pr && '-i' }}
+    - ${{ inputs.pr }}
+    - ${{ inputs.repo && '-r' }}
+    - ${{ inputs.repo }}
+    - ${{ inputs.match && '-m' }}
+    - '${{ inputs.match }}'
+    - ${{ inputs.msg }}
+  env:
+    GITHUB_TOKEN: ${{ inputs.token }}
+
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#branding
+branding:
+  icon: octagon
+  color: gray-dark
