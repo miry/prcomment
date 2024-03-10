@@ -37,10 +37,10 @@ jobs:
   e2e:
     # References: https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     steps:
       -
         uses: miry/prcomment@master
-        if: github.event_name == 'pull_request'
         name: Comment
         with:
           msg: "Testing simple message from job ${{ github.run_id }}!"

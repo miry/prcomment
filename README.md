@@ -23,7 +23,7 @@ prcomment -i 1 -r miry/prcomment Hello from console
 ## Docker
 
 ```shell
-docker run -e GITHUB_TOKEN=<token> --rm -it miry/prcomment:0.1.3 -i 1 -r miry/prcomment Hello
+docker run -e GITHUB_TOKEN=<token> --rm -it ghcr.io/miry/prcomment:0.1.3 -i 1 -r miry/prcomment Hello
 ```
 
 ## Crystal
