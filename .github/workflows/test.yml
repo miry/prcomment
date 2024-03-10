@@ -6,11 +6,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       -
         uses: ruby/setup-ruby@v1
       -
-        uses: oprypin/install-crystal@v1
+        uses: crystal-lang/install-crystal@v1
       -
         name: Run tests
         run: rake test
@@ -18,11 +18,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       -
         uses: ruby/setup-ruby@v1
       -
-        uses: oprypin/install-crystal@v1
+        uses: crystal-lang/install-crystal@v1
       -
         name: Run tests
         run: rake fmt:check
