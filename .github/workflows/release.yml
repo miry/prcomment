@@ -1,0 +1,172 @@
+---
+
+name: Release
+
+on:
+  push:
+    tags: [ "v[0-9]+.[0-9]+.[0-9]+" ]
+    branches:
+      - master
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  PLATFORMS: "linux/arm,linux/amd64,linux/arm64,linux/ppc64le,linux/s390x"
+
+concurrency:
+  group: ${{ github.ref_name }}-docker
+  cancel-in-progress: ${{ !contains(github.ref, 'refs/tags/') }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu, alpine]
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      -
+        name: GPG config
+        run: |
+          mkdir -p ~/.gnupg
+          cat << EOF >> ~/.gnupg/gpg.conf
+          keyserver hkps://keys.openpgp.org
+          auto-key-import
+          auto-key-retrieve
+          EOF
+
+      -
+        name: Verify tag signature
+        run: |
+          # NOTE: Solve the problem with Github action checkout
+          # https://github.com/actions/checkout/issues/290
+          git fetch --tags --force
+
+          version=${GITHUB_REF#refs/tags/*}
+          git show $version
+          git tag -v $version
+        # if: github.ref != 'refs/heads/master'
+        if: ${{ contains(github.ref, 'refs/tags/') }}
+
+      -
+        name: Setup QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm,arm64,ppc64le,s390x
+
+      -
+        name: Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          buildkitd-flags: --debug
+          driver-opts: network=host
+
+      -
+        name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@5139682d94efc37792e6b54386b5b470a68a4737
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      -
+        name: Output Variables
+        id: var
+        run: |
+          echo "prcomment_version=$(grep -m1 "version: " shard.yml | awk -F'[: ]' '{print $3}')" >> $GITHUB_OUTPUT
+
+      -
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          # images: |
+          #   name=${{github.repository}},enable=${{ github.event_name != 'pull_request' }}
+          #   name=ghcr.io/${{github.repository}},enable=${{ github.event_name != 'pull_request' }}
+          #   name=localhost:5000/${{github.repository}}
+          images: |
+            name=ghcr.io/${{github.repository}}
+            name=localhost:5000/${{github.repository}}
+          flavor: suffix=${{ matrix.os != 'alpine' && '-' || '' }}${{ matrix.os != 'alpine' && matrix.os || '' }},onlatest=true
+          tags: |
+            type=ref,event=branch,enable=${{ !contains(github.ref, 'refs/tags/') && github.ref_name != 'master'  }}
+            type=semver,pattern={{version}}
+            type=raw,value=prcomment-${{ steps.var.outputs.prcomment_version }},enable=${{ contains(github.ref, 'refs/tags/') }}
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
+        env:
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
+
+      -
+        name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          pull: true
+          push: true
+          platforms: "linux/arm,linux/amd64,linux/arm64,linux/ppc64le,linux/s390x"
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
+          cache-from: type=gha,scope=${{ matrix.os }}
+          cache-to: type=gha,scope=${{ matrix.os }},mode=max
+          target: runtime
+          sbom: true
+          provenance: mode=max
+          build-args: BUILD_OS=${{ matrix.os }}
+
+      -
+        name: Inspect SBOM and output manifest
+        run: |
+          docker buildx imagetools inspect localhost:5000/${{ github.repository }}:${{ steps.meta.outputs.version }} --format '{{ json (index .SBOM "linux/amd64").SPDX }}' > sbom.json
+          docker buildx imagetools inspect localhost:5000/${{ github.repository }}:${{ steps.meta.outputs.version }} --format '{{ json (index .Provenance "linux/amd64").SLSA }}' > provenance.json
+          docker buildx imagetools inspect localhost:5000/${{ github.repository }}:${{ steps.meta.outputs.version }} --raw
+
+      -
+        name: Scan SBOM
+        id: scan
+        uses: anchore/scan-action@v3
+        with:
+          sbom: "sbom.json"
+          only-fixed: true
+          add-cpes-if-none: true
+          fail-build: false
+
+      -
+        name: Upload scan result to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        continue-on-error: true
+        with:
+          sarif_file: ${{ steps.scan.outputs.sarif }}
+        if: always()
+
+      -
+        name: Upload Scan Results
+        uses: actions/upload-artifact@v4
+        continue-on-error: true
+        with:
+          name: scan-results-${{ matrix.os }}
+          path: |
+            ${{ steps.scan.outputs.sarif }}
+            *.json
+        if: always()
+
+      # -
+      #   name: Build release changelog
+      #   if: ${{ contains(github.ref, 'refs/tags/') }}
+      #   run: |
+      #     version=${GITHUB_REF#refs/tags/v*}
+      #     mkdir -p tmp
+      #     sed '/^## \['$version'\]/,/^# \[/!d;//d;/^\s*$/d' CHANGELOG.md > tmp/release_changelog.md
