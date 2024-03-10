@@ -23,7 +23,7 @@ prcomment -i 1 -r miry/prcomment Hello from console
 ## Docker
 
 ```shell
-docker run -e GITHUB_TOKEN=<token> --rm -it miry/prcomment:0.1.2 -i 1 -r miry/prcomment Hello
+docker run -e GITHUB_TOKEN=<token> --rm -it miry/prcomment:0.1.3 -i 1 -r miry/prcomment Hello
 ```
 
 ## Crystal
@@ -55,7 +55,7 @@ crystal run src/cli.cr -- -i 1 -r miry/prcomment Hello
 ```yml
 steps:
   -
-    uses: miry/prcomment@v0.1.2
+    uses: miry/prcomment@v0.1.3
     if: github.event_name == 'pull_request'
     name: Comment
     with:

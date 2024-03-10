@@ -87,23 +87,6 @@ namespace :github do
   end
 end
 
-namespace :post do
-  desc "Download and format the original JSON of the post"
-  task :fetch, [:url] do |t, args|
-    uri = URI(args.url)
-    uri.query = "format=json" if uri.query.nil?
-    response = Net::HTTP.get(uri)
-    content = response[16..-1]
-    json = JSON.parse(content)
-
-    filename = uri.path.split('/').last + '.json'
-    puts "Download to #{filename}"
-    open(filename, 'w') do |f|
-      f.write(JSON.pretty_generate(json))
-    end
-  end
-end
-
 desc "Run overcommit checks"
 task :overcommit do
   sh "bundle check --gemfile=.overcommit_gems.rb || bundle install --gemfile=.overcommit_gems.rb"
