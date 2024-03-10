@@ -4,10 +4,9 @@ repository: https://github.com/miry/prcomment.git
 version: 0.1.2
 
 authors:
-  - Michael Nikitochkin <miry.sof@gmail.com>
+  - Michael Nikitochkin <miry@vollbio.de>
 
-description: |
-  Creates or updates single comment of PR or Issue
+description: Creates or updates a comment for Github Pull Request or Github Issue.
 
 targets:
   prcomment:
