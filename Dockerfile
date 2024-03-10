@@ -1,12 +1,20 @@
-# Build layer
-FROM crystallang/crystal:nightly-alpine as build
+ARG BUILD_OS=alpine
 
-# Install development tools required for building
-RUN apk --no-cache add \
-    ruby-rake \
-    ruby-json
+##############
+# Build layers
+FROM crystallang/crystal:1.11.2 as build-base-ubuntu
+RUN apt-get update \
+ && apt-get install --no-install-recommends --no-install-suggests -y \
+      build-essential \
+      ruby-rake
 
-# Initialoze the working directory
+FROM crystallang/crystal:1.11.2-alpine as build-base-alpine
+RUN apk add --no-cache \
+      ruby-rake \
+      ruby-json
+
+FROM build-base-${BUILD_OS} as build
+
 WORKDIR /app
 
 # Cache install package dependicies
@@ -17,6 +25,7 @@ RUN shards install --production -v
 COPY . /app/
 RUN rake build:static
 
+###############
 # Runtime layer
 FROM scratch as runtime
 # Put the binary in the ROOT folder
